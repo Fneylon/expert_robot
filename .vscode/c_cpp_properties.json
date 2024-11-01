@@ -1,0 +1,56 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/r01_ros2_ws/install/xarm_planner/include/**",
+        "/home/r01_ros2_ws/install/xarm_gazebo/include/**",
+        "/home/r01_ros2_ws/install/xarm_controller/include/**",
+        "/home/r01_ros2_ws/install/xarm_api/include/**",
+        "/home/r01_ros2_ws/install/xarm_msgs/include/**",
+        "/home/r01_ros2_ws/install/blending_interfaces/include/**",
+        "/home/r01_ros2_ws/install/teleop_interfaces/include/**",
+        "/home/r01_ros2_ws/install/realsense_gazebo_plugin/include/**",
+        "/home/r01_ros2_ws/install/pfields_interfaces/include/**",
+        "/home/r01_ros2_ws/install/gui_interfaces/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_planners/chomp/chomp_interface/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_planners/chomp/chomp_motion_planner/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_planners/pilz_industrial_motion_planner/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_planners/pilz_industrial_motion_planner_testutils/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_planners/test_configs/prbt_ikfast_manipulator_plugin/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_plugins/moveit_ros_control_interface/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_plugins/moveit_simple_controller_manager/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/benchmarks/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/move_group/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/moveit_servo/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/occupancy_map_monitor/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/robot_interaction/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_ros/warehouse/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_app_plugins/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_assistant/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_controllers/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_core_plugins/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_framework/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/moveit2/moveit_setup_assistant/moveit_setup_srdf_plugins/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/sensor_stream/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/thirdparty/realsense_gazebo_plugin/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/xarm_api/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/xarm_controller/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/xarm_gazebo/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/xarm_moveit_servo/include/**",
+        "/home/r01_ros2_ws/src/map_comparison/xarm_ros2/xarm_planner/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

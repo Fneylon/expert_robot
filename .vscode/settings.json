@@ -1,0 +1,32 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/r01_ros2_ws/install/xarm_msgs/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/pfields/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/uf_ros_lib/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/teleop/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/gui/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/blending/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/blending_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/teleop_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/pfields_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/mapping/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/gui_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/r01_ros2_ws/install/xarm_msgs/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/pfields/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/uf_ros_lib/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/teleop/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/gui/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/blending/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/blending_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/teleop_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/pfields_interfaces/local/lib/python3.10/dist-packages",
+        "/home/r01_ros2_ws/install/mapping/lib/python3.10/site-packages",
+        "/home/r01_ros2_ws/install/gui_interfaces/local/lib/python3.10/dist-packages",
+        "/opt/ros/humble/lib/python3.10/site-packages",
+        "/opt/ros/humble/local/lib/python3.10/dist-packages"
+    ]
+}
