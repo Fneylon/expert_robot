@@ -31,9 +31,9 @@ from mpl_toolkits.mplot3d import Axes3D
 
 from sensor_msgs.msg import Joy
 from std_msgs.msg import (
-    Int8, Int16, Int32, Int16MultiArray, 
-    Float32, Float32MultiArray, 
-    MultiArrayDimension, 
+    Int8, Int16, Int32, Int16MultiArray,
+    Float32, Float32MultiArray,
+    MultiArrayDimension,
     String,
 )
 from geometry_msgs.msg import (
@@ -47,12 +47,13 @@ from visualization_msgs.msg import (
 )
 
 
-from xarm_msgs.srv import (MoveCartesian, SetInt16) 
+from xarm_msgs.srv import (MoveCartesian, SetInt16)
 from xarm_msgs.msg import RobotMsg
 
 from enum import Enum, auto
 
 from .submodules.xarm_moveit_wrapper import XARM, XarmWrapper
+
 
 class State_(Enum):
     START = auto()
@@ -63,28 +64,30 @@ class State_(Enum):
     EXECUTING = auto()
     PLANNING = auto()
 
+
 class ExpertTrajectories(Node):
     def __init__(self):
         super().__init__('expert_trajectories')
         self.get_logger().info('Initializing Expert Trajectories Node...')
 
-        # Initialize the xArm Moveit Wrapper: 
-        self.XarmMoveIt = XarmWrapper(self) # NOTE: this is the Moveit Wrapper for the xArm which inherits this node
+        # Initialize the xArm Moveit Wrapper:
+        # NOTE: this is the Moveit Wrapper for the xArm which inherits this node
+        self.XarmMoveIt = XarmWrapper(self)
 
-        # Initialize the Xarm Moveit State Machine: 
+        # Initialize the Xarm Moveit State Machine:
         self.moveit_state = XARM
 
         # self.param_flag = False
         self.state = State_.START
         self.print_input = True
 
-         # Initialize Publishers: 
+        # Initialize Publishers:
         self._initialize_publishers()
 
-        # Initialize Subscribers: 
+        # Initialize Subscribers:
         self._initialize_subscribers()
 
-        # Initialize Clients: 
+        # Initialize Clients:
         # self._initialize_clients()
 
         # self.state_ = State_.START
@@ -94,7 +97,8 @@ class ExpertTrajectories(Node):
         self.timer_freq = 50.0
 
         # Init timers
-        self.timer = self.create_timer(self.timer_freq, self.timer_callback) # NOTE: this has to be at 0.02 for homing purposes
+        # NOTE: this has to be at 0.02 for homing purposes
+        self.timer = self.create_timer(self.timer_freq, self.timer_callback)
 
     def timer_callback(self):
 
@@ -107,7 +111,7 @@ class ExpertTrajectories(Node):
             self.XarmMoveIt.plan_to_joint_states(self.home_joint_positions)
 
         if self.state == State_.PLANNING:
-            if self.XarmMoveIt.state == self.moveit_state.EXECUTING: 
+            if self.XarmMoveIt.state == self.moveit_state.EXECUTING:
                 self.state = State_.EXECUTING
                 self.get_logger().info("Moving Robot to Request Joint Positions")
 
@@ -120,13 +124,14 @@ class ExpertTrajectories(Node):
             self.get_logger().warn("ROBOT REHOME CALLED")
             self.state = State_.HOMING
 
-        if self.state == State_.DONE: 
+        if self.state == State_.DONE:
             self.shutdown_hook("Reached End of Trial")
 
         if self.state == State_.TRANSITION:
-            if self.print_input: 
+            if self.print_input:
                 self.get_logger().info("In TRANSITION State")
-                self.get_logger().info(f'\n\tNOTE[{self.task}]:Begin reaching for target {self.target_idx}, press alt + s')
+                self.get_logger().info(
+                    f'\n\tNOTE[{self.task}]:Begin reaching for target {self.target_idx}, press alt + s')
                 self.print_input = False
                 future = self.start_client.call_async(self.start_client_req)
                 future.add_done_callback(self.start_servo_cb)
@@ -136,11 +141,11 @@ class ExpertTrajectories(Node):
             self.state = State_.REACHING
             self.start_time = t.time()
             self.reaching_time = t.time() - self.start_time
-    
+
         if self.state == State_.REACHING:
 
             if self.reaching_time <= self.reach_duration:
-                # Publish the control signal: 
+                # Publish the control signal:
                 self.publish_robot_cmd(self.signal[self.t_idx])
                 self.t_idx += 1
                 self.reaching_time = t.time() - self.start_time
@@ -164,7 +169,7 @@ class ExpertTrajectories(Node):
 
     def publish_robot_cmd(self, signal):
 
-        # Publish the control signal: 
+        # Publish the control signal:
         msg = TwistStamped()
         msg.twist.angular.x = 0.0
         msg.twist.angular.y = 0.0
@@ -182,11 +187,29 @@ class ExpertTrajectories(Node):
             msg.twist.linear.y = 0.0
             msg.twist.linear.z = 0.0
 
-        elif self.curr_dim == 'z': 
+        elif self.curr_dim == 'z':
             msg.header.stamp = self.get_clock().now().to_msg()
             msg.twist.linear.x = 0.0
             msg.twist.linear.y = 0.0
             msg.twist.linear.z = signal
+
+        elif self.curr_dim == 'roll':
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.twist.angular.x = signal
+            msg.twist.angular.y = 0.0
+            msg.twist.angular.z = 0.0
+
+        elif self.curr_dim == 'pitch':
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.twist.angular.x = 0.0
+            msg.twist.angular.y = signal
+            msg.twist.angular.z = 0.0
+
+        elif self.curr_dim == 'yaw':
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.twist.angular.x = 0.0
+            msg.twist.angular.y = 0.0
+            msg.twist.angular.z = signal
 
         self.robot_cmd_pub.publish(msg)
 
@@ -199,24 +222,24 @@ class ExpertTrajectories(Node):
         # Parameters for defining the synthetic user signal:
         self.phase = 0
         self.amplitude = 1.0
-        self.period = 20.0 # Seconds
+        self.period = 20.0  # Seconds
         self.freq = 1.0 / self.period
-        self.duration = 1.0 # For step signal at max amplitude
+        self.duration = 1.0  # For step signal at max amplitude
 
-        # Initialize the stopwatch: 
+        # Initialize the stopwatch:
         self.start_time = None
         self.reaching_time = None
-        self.reach_duration = 20.0 # Seconds
+        self.reach_duration = 20.0  # Seconds
 
-        # Time Series Tracker: 
+        # Time Series Tracker:
         self.t_idx = 0
 
         # load in the synthetic signal:
-        self.signal = np.loadtxt('/home/r01_ros2_ws/src/expert_robot/expert_robot/expert_robot/submodules/synthetic_signal.txt')
-        
-        # Home Position: 
-        self.home_joint_positions = [0.0, -1.5708, 0.0, -1.5708, 0.0, 0.0, 0.0]
+        self.signal = np.loadtxt(
+            '/home/r01_ros2_ws/src/expert_robot/expert_robot/expert_robot/submodules/synthetic_signal.txt')
 
+        # Home Position:
+        self.home_joint_positions = [0.0, -1.5708, 0.0, -1.5708, 0.0, 0.0, 0.0]
 
     def _initialize_publishers(self):
         self.get_logger().info("Initializing Publishers")
@@ -224,7 +247,7 @@ class ExpertTrajectories(Node):
         # Robot Command Publisher
         self.robot_cmd_pub = self.create_publisher(
             TwistStamped, '/servo_server/delta_twist_cmds', 10)
-        
+
         # Current Dimension Publisher
         self.current_dim_pub = self.create_publisher(
             String, '/current_dim', 10)
@@ -234,16 +257,18 @@ class ExpertTrajectories(Node):
 
     def _initialize_clients(self):
         self.get_logger().info("Initializing Clients")
-        
-        ### Create Clients to Control the xArm: 
+
+        # Create Clients to Control the xArm:
         # start servo client
-        self.start_client = self.create_client(Trigger, '/servo_server/start_servo')
+        self.start_client = self.create_client(
+            Trigger, '/servo_server/start_servo')
         self.start_client_req = Trigger.Request()
         while not self.start_client.wait_for_service(timeout_sec=3.0):
             self.get_logger().info("start service not found")
 
         # stop servo client
-        self.stop_client = self.create_client(Trigger, '/servo_server/stop_servo')
+        self.stop_client = self.create_client(
+            Trigger, '/servo_server/stop_servo')
         self.stop_client_req = Trigger.Request()
         while not self.stop_client.wait_for_service(timeout_sec=3.0):
             self.get_logger().info("stop service not found")
@@ -251,17 +276,16 @@ class ExpertTrajectories(Node):
         start = self.start_client.call_async(self.start_client_req)
         rclpy.spin_until_future_complete(self, start)
 
-                
         # Create the Set Position Client
-        self.set_position_srv = self.create_client(MoveCartesian, '/xarm/set_position')
+        self.set_position_srv = self.create_client(
+            MoveCartesian, '/xarm/set_position')
         self.set_position_req = MoveCartesian.Request()
-        self.set_position_req.mvtime = 0.0 # Move Time
-        self.set_position_req.speed = 50.0 # Move Speed
+        self.set_position_req.mvtime = 0.0  # Move Time
+        self.set_position_req.speed = 50.0  # Move Speed
         self.set_position_req.acc = 500.0
 
         while not self.set_position_srv.wait_for_service(timeout_sec=5.0):
             self.get_logger().info('Set Position Service not available, waiting again...')
-
 
 
 def main():
@@ -271,5 +295,3 @@ def main():
     rclpy.spin(expert_traj)
     expert_traj.get_logger().info("Shutting down xarmController node...\n\n")
     rclpy.shutdown()
-    
-

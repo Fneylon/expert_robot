@@ -10,9 +10,9 @@ import yaml
 
 from sensor_msgs.msg import Joy
 from std_msgs.msg import (
-    Int8, Int16, Int32, Int16MultiArray, 
-    Float32, Float32MultiArray, 
-    MultiArrayDimension, 
+    Int8, Int16, Int32, Int16MultiArray,
+    Float32, Float32MultiArray,
+    MultiArrayDimension,
     String,
 )
 from geometry_msgs.msg import (
@@ -49,9 +49,19 @@ class RecordTrajectories(Node):
 
         # Open the CSV file
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.csv_file = open(f'/home/r01_ros2_ws/src/expert_robot/expert_robot/trajectories/tool_pose_{timestamp}.csv', 'w', newline='')
-        self.csv_writer = csv.writer(self.csv_file)
-        self.csv_writer.writerow(['timestamp', 'position_x', 'position_y', 'position_z', 'orientation_x', 'orientation_y', 'orientation_z', 'current_dim'])
+        self.csv_file_tool_pose = open(
+            f'/home/r01_ros2_ws/src/expert_robot/expert_robot/trajectories/tool_pose_{timestamp}.csv', 'w', newline='')
+        self.csv_file_joint_angles = open(
+            f'/home/r01_ros2_ws/src/expert_robot/expert_robot/trajectories/tool_pose_{timestamp}.csv', 'w', newline='')
+
+        self.csv_writer_tool_pose = csv.writer(self.csv_file_tool_pose)
+
+        self.csv_writer_tool_pose.writerow(['timestamp', 'position_x', 'position_y', 'position_z',
+                                            'orientation_x', 'orientation_y', 'orientation_z', 'current_dim'])
+
+        self.csv_writer_joint_angles = csv.writer(self.csv_file_joint_angles)
+        self.csv_writer_joint_angles.writerow(
+            ['timestamp', 'joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6', 'joint_7', 'current_dim'])
 
     def robot_state_callback(self, msg):
         # Get robot pose
@@ -59,7 +69,7 @@ class RecordTrajectories(Node):
 
         # Get current timestamp
         timestamp = self.get_clock().now().to_msg()
-        
+
         # Write to CSV
         self.csv_writer.writerow([
             timestamp.sec + timestamp.nanosec * 1e-9,
@@ -79,7 +89,7 @@ def main(args=None):
     rclpy.init(args=args)
     record_trajectories = RecordTrajectories()
 
-    try: 
+    try:
         rclpy.spin(record_trajectories)
     except KeyboardInterrupt:
         pass
@@ -87,6 +97,3 @@ def main(args=None):
     # Destroy the node explicitly
     record_trajectories.destroy_node()
     rclpy.shutdown()
-
-
-
